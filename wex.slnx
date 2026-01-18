@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Wex.Application/Wex.Application.csproj" />
+    <Project Path="src/Wex.Cli/Wex.Cli.csproj" />
+    <Project Path="src/Wex.DataAccess/Wex.DataAccess.csproj" />
+    <Project Path="src/Wex.Domain/Wex.Domain.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Wex.Tests/Wex.Tests.csproj" />
+  </Folder>
+</Solution>
