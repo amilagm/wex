@@ -1,41 +1,92 @@
-# Wex Coding Exercise
+# Card Management
 
-Console application that manages cards and purchase transactions with currency conversion using the
-U.S. Treasury Reporting Rates of Exchange API.
+Console application that manages cards and purchase transactions with currency conversion using the U.S. Treasury Reporting Rates of Exchange API.
 
-## CLI Usage
+## Requirements
 
-Build:
+- .NET 10 SDK
+
+## Build
 
 ```bash
-dotnet build Wex.slnx
+dotnet build
 ```
 
-Create a card:
+## Run Tests
 
 ```bash
-dotnet run --project src/Wex.Cli -- card create --number 1234567890123456 --limit 5000.00
+dotnet test
 ```
 
-Record a purchase:
+## Usage
+
+Start the interactive CLI:
 
 ```bash
-dotnet run --project src/Wex.Cli -- purchase add --card-id <card-guid> --description "Fuel" --date 2024-01-15 --amount 125.50
+dotnet run --project src/Wex.Cli
 ```
 
-Retrieve a converted purchase:
+### Interactive Commands
 
-```bash
-dotnet run --project src/Wex.Cli -- purchase get --purchase-id <purchase-guid> --currency EUR
+Once running, you'll see the `wex>` prompt. Available commands:
+
+**Card Management**
+```
+card create --number <16-digit-number> --limit <amount>
+card balance --card-number <16-digit-number> [--currency <code>] [--as-of <date>]
 ```
 
-Retrieve available balance:
+**Purchase Management**
+```
+purchase add --card-number <16-digit-number> --description <text> --date <yyyy-MM-dd> --amount <amount>
+purchase get --purchase-id <guid> [--currency <code>]
+```
 
-```bash
-dotnet run --project src/Wex.Cli -- card balance --card-id <card-guid> --currency EUR --as-of 2024-01-31
+**Other**
+```
+help     Show available commands
+exit     Quit the application
+```
+
+### Example Session
+
+```
+wex> card create --number 1234567890123456 --limit 5000
+Card created successfully
+Card number: 1234567890123456
+Credit limit (USD): 5000.00
+
+wex> purchase add --card-number 1234567890123456 --description "Fuel" --date 2024-01-15 --amount 125.50
+Purchase recorded successfully
+Purchase ID: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+Card number: 1234567890123456
+Description: Fuel
+Date: 2024-01-15
+Amount (USD): 125.50
+
+wex> card balance --card-number 1234567890123456 --currency EUR
+Card number: 1234567890123456
+Credit limit (USD): 5000.00
+Total purchases (USD): 125.50
+Available (USD): 4874.50
+Exchange rate (EUR): 0.92 on 2024-01-15
+Available (EUR): 4484.54
+
+wex> exit
+Goodbye!
 ```
 
 ## Configuration
 
-Configuration is stored in `src/Wex.Cli/appsettings.json`. The default SQLite file is `./data/wex.db`
-relative to the CLI working directory.
+Configuration is stored in `src/Wex.Cli/appsettings.json`. The SQLite database is stored in the `data/` folder at the solution root.
+
+## Direct Command Execution
+
+Commands can also be passed directly for scripting:
+
+```bash
+dotnet run --project src/Wex.Cli -- card create --number 1234567890123456 --limit 5000.00
+dotnet run --project src/Wex.Cli -- purchase add --card-number 1234567890123456 --description "Fuel" --date 2024-01-15 --amount 125.50
+dotnet run --project src/Wex.Cli -- purchase get --purchase-id <guid> --currency EUR
+dotnet run --project src/Wex.Cli -- card balance --card-number 1234567890123456 --currency EUR --as-of 2024-01-31
+```
